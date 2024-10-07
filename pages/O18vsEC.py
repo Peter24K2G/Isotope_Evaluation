@@ -13,39 +13,20 @@ st.sidebar.title("Resultados Hidrogeológicos EL EDEN")
 df = pd.read_excel("./data.xlsx")
 df = df.loc[df["Autor"]=="UNAL"]
 
-# Definir las líneas de referencia para el gráfico isotópico
-delta18O = np.linspace(-9, -7.85, num=50)
-delta2H = delta18O * 8.03 + 9.66
-Sadelta18O = np.linspace(-9, -7.85, num=50)
-Sadelta2H = Sadelta18O * 8.02 + 12.12  # Saylor
+st.markdown("""
+            ## O18 vs Cl⁻
+            """)
 
-# Título de la sección
-st.markdown("# Resultados Isótopos Estables")
 
-# Selección de agrupación por color y símbolo
-# col1, col2 = st.columns(2)
-# with col1:
-#     color = st.selectbox(
-#         "Seleccione agrupación por color",
-#         df.columns,
-#     )
-
-# with col2:
-#     symbol = st.selectbox(
-#         "Seleccione agrupación por símbolo",
-#         df.columns
-#     )
-
-# Crear el gráfico isotópico interactivo
-fig = px.scatter(df, y="2H", x="O18", symbol="tipo", color="Nombre")
+fig = px.scatter(df, y="O18", x="EC", symbol="tipo", color="Nombre")
 fig.update_traces(textposition='top center', textfont=dict(size=11))
 fig.update_layout(
-   yaxis_title='d2H',
-   xaxis_title='d18O',
+   yaxis_title='d18O',
+   xaxis_title='EC  :',
    showlegend=True
 )
-fig.add_trace(go.Scatter(y=delta2H, x=delta18O, mode='lines', name='CML - (Rodriguez, 2004)', line=dict(color='darkgray')))
-fig.add_trace(go.Scatter(y=Sadelta2H, x=Sadelta18O, mode='lines', name='CML - (Saylor et al., 2009)', line=dict(color='gray')))
+# fig.add_trace(go.Scatter(y=delta2H, x=delta18O, mode='lines', name='CML - (Rodriguez, 2004)', line=dict(color='darkgray')))
+# fig.add_trace(go.Scatter(y=Sadelta2H, x=Sadelta18O, mode='lines', name='CML - (Saylor et al., 2009)', line=dict(color='gray')))
 
 # Mostrar el gráfico isotópico
 st.plotly_chart(fig)
@@ -58,7 +39,7 @@ with col1:
         "Seleccione puntos para el grupo 1",
         options=df.index,
         format_func=lambda x: f"{df.loc[x,"Autor"]}:{df.loc[x, 'Nombre']}",
-        default=[6,15]
+        default=[5,6,7,8,9,10,11,12,13,14]
         # format_func=lambda x: f"O18: {df.loc[x, 'O18']}, 2H: {df.loc[x, '2H']}"
     )
 
@@ -68,7 +49,7 @@ with col2:
         "Seleccione puntos para el grupo 2",
         options=df.index,
         format_func=lambda x: f"{df.loc[x,"Autor"]}:{df.loc[x, 'Nombre']}",
-        default=[0,12]
+        default=[0,3,4,2]
         # format_func=lambda x: f"O18: {df.loc[x, 'O18']}, 2H: {df.loc[x, '2H']}"
     )
 
@@ -78,7 +59,7 @@ with col3:
         "Seleccione puntos para el grupo 3",
         options=df.index,
         format_func=lambda x: f"{df.loc[x,"Autor"]}:{df.loc[x, 'Nombre']}",
-        default=[7,4]
+        default=[1]
         # format_func=lambda x: f"O18: {df.loc[x, 'O18']}, 2H: {df.loc[x, '2H']}"
     )
 
@@ -154,7 +135,7 @@ folium.GeoJson(geojson_data).add_to(m)
 folium_static(m)
 
 
-nfig = px.scatter(df_selected, y="2H", x="O18", symbol="Nombre", color="Grupo")
-nfig.add_trace(go.Scatter(y=delta2H, x=delta18O, mode='lines', name='CML - (Rodriguez, 2004)', line=dict(color='darkgray')))
-nfig.add_trace(go.Scatter(y=Sadelta2H, x=Sadelta18O, mode='lines', name='CML - (Saylor et al., 2009)', line=dict(color='gray')))
+nfig = px.scatter(df_selected,y="O18", x="EC", symbol="Nombre", color="Grupo")
+# nfig.add_trace(go.Scatter(y=delta2H, x=delta18O, mode='lines', name='CML - (Rodriguez, 2004)', line=dict(color='darkgray')))
+# nfig.add_trace(go.Scatter(y=Sadelta2H, x=Sadelta18O, mode='lines', name='CML - (Saylor et al., 2009)', line=dict(color='gray')))
 st.plotly_chart(nfig)

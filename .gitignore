@@ -1,5 +1,6 @@
 # Ignorar el entorno virtual
 myenv/
+Analisis/
 
 # Ignorar archivos temporales de Python
 __pycache__/
